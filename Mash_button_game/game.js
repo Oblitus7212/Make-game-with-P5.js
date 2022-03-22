@@ -1,0 +1,150 @@
+let isPause = true;
+let saveButton;
+let canvas;
+
+// player data
+let p1data;
+let p1datax;
+let p1datay;
+
+// bot da6ta
+let botdata;
+let botdatax;
+let botdatay;
+
+let phase; //Game interface
+let targetFrameRate = 24;
+
+// Utility function to create 2-digits string
+valueTo2IndexString = (i) => {
+    return (i < 10) ? "0" + i : i;
+}
+preload = () => {
+    p1data = {
+            idleImg: loadImage("data/p1/Base pack/Player/p1_duck.png"),
+            playIndex: 0
+        }
+        // Derive a names of p1 walk resource
+    p1data.rscWalkImages = new Array(11).fill("p1_walk").map(
+        (value, i) => { return value + valueTo2IndexString(i + 1) + ".png"; }
+    );
+
+    botdata = {
+            idleImg: loadImage("data/p1/Base pack/Player/p2_duck.png"),
+            playIndex: 0
+        }
+        // Derive a names of p1 walk resource
+    botdata.rscWalkImages = new Array(11).fill("p2_walk").map(
+        (value, i) => { return value + valueTo2IndexString(i + 1) + ".png"; }
+    );
+
+    Startmenu = {
+        startImg: loadImage("data/p1/Buildings expansion/sample.png"),
+        houseBeige: loadImage("data/p1/Buildings expansion/Tiles/houseBeige.png"),
+    }
+
+    // Assign a resource to the p1data
+    p1data.walkImages = p1data.rscWalkImages.map(
+        filename => loadImage("data/p1/Base pack/Player/p1_walk/PNG/" + filename)
+    );
+    print(p1data.walkImages);
+
+    botdata.walkImages = botdata.rscWalkImages.map(
+        filename => loadImage("data/p1/Base pack/Player/p2_walk/PNG/" + filename)
+    );
+    print(botdata.walkImages);
+}
+
+setup = () => {
+    phase = 0; // Check if it still on menu
+    frameRate(targetFrameRate);
+    createCanvas(windowWidth, windowHeight);
+    // player start point
+    p1datax = 100;
+    p1datay = height / 2;
+    textSize(60);
+    //bot start point
+    botdatax = 100;
+    botdatay = (height / 2) - 100;
+}
+
+draw = () => {
+    if (phase == 0) {
+        background(Startmenu.startImg);
+        textAlign(CENTER);
+        text('Click left mouse to start', 990, 540)
+    }
+    if (phase == 1) {
+        background(Startmenu.houseBeige);
+
+        fill('White');
+        rect(150, 0, 10, 2000);
+
+        fill('Black');
+        rect(1800, 0, 10, 2000);
+
+        textSize(60);
+        text('Press w to start the race then mash d to run', 990, 500);
+        text('And you can pause anytime just press w again', 990, 600);
+
+        textSize(16);
+        text('This is you', p1datax - 70, p1datay + 90, 200, 200)
+            // Do Something here
+        if (!isPause) {
+            // Playing walk sequences
+            image(p1data.walkImages[p1data.playIndex], p1datax, p1datay);
+            (p1data.playIndex >= p1data.walkImages.length - 1) ? p1data.playIndex = 0: p1data.playIndex++;
+
+            image(botdata.walkImages[botdata.playIndex], botdatax, botdatay);
+            (botdata.playIndex >= botdata.walkImages.length - 1) ? botdata.playIndex = 0: botdata.playIndex++;
+            setTimeout(botdatax = botdatax + 5, 1000);
+            if (p1datax >= 1800) {
+                isPause = !isPause;
+                phase = 2;
+            }
+            if (botdata >= 1800) {
+                isPause = !isPause;
+                phase = 3;
+            }
+        } else {
+            // Standing idle
+            //player
+            image(p1data.idleImg, p1datax, p1datay);
+            //bot
+            image(botdata.idleImg, botdatax, botdatay);
+        }
+    }
+    if (phase == 2) {
+        background(Startmenu.houseBeige);
+        textAlign(CENTER);
+        textSize(60);
+        text('YOU WIN!!!', 990, 600);
+    }
+    if (phase == 3) {
+        background(Startmenu.houseBeige);
+        textAlign(CENTER);
+        textSize(60);
+        text('YOU LOSE TRY AGAIN', 990, 600);
+    }
+}
+
+function mouseClicked() {
+    if (mouseButton == LEFT) {
+        phase = 1;
+    }
+    // prevent default
+    return false;
+}
+
+keyPressed = () => {
+    if (key === 'w') {
+        p1data.playIndex = 0;
+        botdata.playIndex = 0;
+        isPause = !isPause;
+    }
+    if (key === 'd') {
+        if (!isPause) {
+            p1datax = p1datax + 12;
+        }
+    }
+}
