@@ -60,35 +60,36 @@ setup = () => {
     frameRate(targetFrameRate);
     createCanvas(windowWidth, windowHeight);
     // player start point
-    p1datax = 100;
-    p1datay = height / 2;
+    p1datax = windowWidth / 17;
+    p1datay = windowHeight / 2;
     textSize(60);
     //bot start point
-    botdatax = 100;
-    botdatay = (height / 2) - 100;
+    botdatax = windowWidth / 17;
+    botdatay = (windowHeight / 2) - 100;
 }
 
 draw = () => {
     if (phase == 0) {
         background(Startmenu.startImg);
         textAlign(CENTER);
-        text('Click left mouse to start', 990, 540)
+        text('Click left mouse to start', windowWidth / 2, windowHeight / 2);
     }
     if (phase == 1) {
         background(Startmenu.houseBeige);
 
         fill('White');
-        rect(150, 0, 10, 2000);
+        rect(windowWidth / 12, windowHeight * 0, 10, 2000);
 
         fill('Black');
-        rect(1800, 0, 10, 2000);
+        rect(windowWidth * 0.9, windowHeight * 0, 10, 2000);
 
         textSize(60);
-        text('Press w to start the race then mash d to run', 990, 500);
-        text('And you can pause anytime just press w again', 990, 600);
+        text('The green one is you', windowWidth / 2, windowHeight / 2.5);
+        text('Press w to start the race then mash d to run', windowWidth / 2, windowHeight / 2);
+        text('And you can pause anytime just press w again', windowWidth / 2, windowHeight / 1.7);
 
         textSize(16);
-        text('This is you', p1datax - 70, p1datay + 90, 200, 200)
+        text('This is you', p1datax - windowWidth / 27, windowHeight * 0.6, 200, 200)
             // Do Something here
         if (!isPause) {
             // Playing walk sequences
@@ -97,12 +98,12 @@ draw = () => {
 
             image(botdata.walkImages[botdata.playIndex], botdatax, botdatay);
             (botdata.playIndex >= botdata.walkImages.length - 1) ? botdata.playIndex = 0: botdata.playIndex++;
-            setTimeout(botdatax = botdatax + 5, 1000);
-            if (p1datax >= 1800) {
+            setTimeout(botdatax += (windowWidth / 300), 1000);
+            if (p1datax >= windowWidth * 0.9) {
                 isPause = !isPause;
                 phase = 2;
             }
-            if (botdata >= 1800) {
+            if (botdatax >= windowWidth * 0.9) {
                 isPause = !isPause;
                 phase = 3;
             }
@@ -118,13 +119,15 @@ draw = () => {
         background(Startmenu.houseBeige);
         textAlign(CENTER);
         textSize(60);
-        text('YOU WIN!!!', 990, 600);
+        text('YOU WIN!!!', windowWidth / 2, windowHeight / 2);
+        text('Press p to play again', windowWidth / 2, windowHeight / 1.7);
     }
     if (phase == 3) {
         background(Startmenu.houseBeige);
         textAlign(CENTER);
         textSize(60);
-        text('YOU LOSE TRY AGAIN', 990, 600);
+        text('YOU LOSE TRY AGAIN', windowWidth / 2, windowHeight / 2);
+        text('Press p to play again', windowWidth / 2, windowHeight / 1.7);
     }
 }
 
@@ -136,6 +139,12 @@ function mouseClicked() {
     return false;
 }
 
+function reset() {
+    p1datax = windowWidth / 17;
+    //bot start point
+    botdatax = windowWidth / 17;
+}
+
 keyPressed = () => {
     if (key === 'w') {
         p1data.playIndex = 0;
@@ -144,7 +153,11 @@ keyPressed = () => {
     }
     if (key === 'd') {
         if (!isPause) {
-            p1datax = p1datax + 12;
+            p1datax += (windowWidth / 150);
         }
+    }
+    if (key === 'p') {
+        reset();
+        phase = 1;
     }
 }
