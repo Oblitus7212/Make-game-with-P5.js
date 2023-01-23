@@ -7,4 +7,4 @@ If you want to open the javascript in Learning folder. You need to change direct
 
 The game is a simple game about just mashing the d button to make the character move to the goal.
 
-For the asset I use, I am downloading it from this guy --> "https://kenney.nl/". Check it out he has many amazing free-to-use assets.
+For the asset I use, I am downloading it from this guy --> "https://kenney.nl/". Check it out he has many amazing assets.
